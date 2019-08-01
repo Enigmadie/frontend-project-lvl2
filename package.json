@@ -1,8 +1,8 @@
 {
   "name": "enigma-gendiff",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "cli app",
-  "main": "index.js",
+  "main": "",
   "bin": {
     "help": "dist/bin/index.js"
   },
