@@ -1,14 +1,12 @@
 import fs from 'fs';
 import { has } from 'lodash';
 
-const pathSelect = (path) => {
-  return (path[0] === '/')
+const pathSelect = path => (
+  (path[0] === '/')
     ? fs.readFileSync(`${__dirname}${path}`)
-    : fs.readFileSync(path);
-}
+    : fs.readFileSync(path));
 
 export default (fileBefore, fileAfter) => {
-
   const readFileBefore = pathSelect(fileBefore);
   const readFileAfter = pathSelect(fileAfter);
 
