@@ -2,7 +2,6 @@ import fs from 'fs';
 import { has } from 'lodash';
 
 export default (fileBefore, fileAfter) => {
-
   const readFileBefore = fs.readFileSync(fileBefore);
   const readFileAfter = fs.readFileSync(fileAfter);
 
