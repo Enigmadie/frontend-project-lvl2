@@ -2,6 +2,7 @@
 
 import program from 'commander';
 import { version } from '../../package.json';
+import genDiff from '..';
 
 program
   .version(version)
@@ -9,8 +10,7 @@ program
   .option('-f, --format [type]', 'Output format')
   .arguments('<firstConfig> <secondConfig>')
   .action((firstConfig, secondConfig) => {
-    console.log(firstConfig);
-    console.log(secondConfig);
+    console.log(genDiff(firstConfig, secondConfig));
   });
 
 program.parse(process.argv);

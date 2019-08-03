@@ -1,10 +1,10 @@
 {
   "name": "enigma-gendiff",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "description": "cli app",
-  "main": "",
+  "main": "dist/index.js",
   "bin": {
-    "help": "dist/bin/index.js"
+    "gendiff": "dist/bin/gendiff.js"
   },
   "files": [
     "dist"
@@ -36,7 +36,8 @@
     "eslint-plugin-import": "^2.18.2"
   },
   "dependencies": {
-    "commander": "^2.20.0"
+    "commander": "^2.20.0",
+    "lodash": "^4.17.15"
   },
   "keywords": [
     "cli",
