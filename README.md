@@ -3,4 +3,4 @@
 <a href="https://travis-ci.org/Enigmadie/frontend-project-lvl2"><img src="https://travis-ci.org/Enigmadie/frontend-project-lvl2.svg?branch=master" /></a>
 
 Stage 3: compare flat files
-https://asciinema.org/connect/5284a56e-3108-4fb6-b299-9d8bfe9809f6
+<a href="https://asciinema.org/a/EGDHm03ndDehLTiOn3oZGoSZM" target="_blank"><img src="https://asciinema.org/a/EGDHm03ndDehLTiOn3oZGoSZM.svg" /></a>
