@@ -7,3 +7,6 @@ Stage 3: compare flat json files
 
 Stage 5: compare flat yml files
 <a href="https://asciinema.org/a/Yb8cBZztMw1Qm8gEtliwpe9em" target="_blank"><img src="https://asciinema.org/a/Yb8cBZztMw1Qm8gEtliwpe9em.svg" /></a>
+
+Stage 6: compare flat ini files
+<a href="https://asciinema.org/a/iTAT702C27xAM78cpKFl9wCg1" target="_blank"><img src="https://asciinema.org/a/iTAT702C27xAM78cpKFl9wCg1.svg" /></a>

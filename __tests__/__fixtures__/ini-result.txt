@@ -1,0 +1,11 @@
+{
+    host: hexlet.io
+  + timeout: 20
+  - timeout: 40
+  + folderType: Generic
+  - folderType: Direct
+  + vid: false
+  - vid: true
+  - control: false
+  + mode: test
+}

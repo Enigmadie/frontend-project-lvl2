@@ -14,3 +14,8 @@ test('compare yml files', () => {
   expect(gendiff(pathBuild('before.yml'), pathBuild('after.yml')))
     .toBe(resultBuild('yml-result.txt'));
 });
+
+test('compare ini files', () => {
+  expect(gendiff(pathBuild('before.ini'), pathBuild('after.ini')))
+    .toBe(resultBuild('ini-result.txt'));
+});
