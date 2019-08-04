@@ -1,26 +1,25 @@
 import fs from 'fs';
-import { has } from 'lodash';
+import path from 'path';
+import viewBuild from './view-build';
+import parse from './parser';
 
 export default (fileBefore, fileAfter) => {
+  const pathExtNameBefore = path.extname(fileBefore);
+  const pathExtNameAfter = path.extname(fileAfter);
+
+  if (!(pathExtNameBefore in parse) || !(pathExtNameAfter in parse)) {
+    throw new Error('Format is not valid');
+  }
+
+  if (pathExtNameBefore !== pathExtNameAfter) {
+    throw new Error('Formats are not equal');
+  }
+
   const readFileBefore = fs.readFileSync(fileBefore);
   const readFileAfter = fs.readFileSync(fileAfter);
 
-  const fileContentBefore = JSON.parse(readFileBefore);
-  const fileContentAfter = JSON.parse(readFileAfter);
+  const fileContentBefore = parse[pathExtNameBefore](readFileBefore);
+  const fileContentAfter = parse[pathExtNameAfter](readFileAfter);
 
-  const fileKeys = Object.keys({ ...fileContentBefore, ...fileContentAfter });
-
-  const fileDiff = fileKeys.reduce((acc, el) => {
-    if (!has(fileContentAfter, el)) {
-      return `${acc}  - ${el}: ${fileContentBefore[el]}\n`;
-    }
-    if (fileContentBefore[el] === fileContentAfter[el]) {
-      return `${acc}    ${el}: ${fileContentAfter[el]}\n`;
-    }
-    return (!has(fileContentBefore, el))
-      ? `${acc}  + ${el}: ${fileContentAfter[el]}\n`
-      : `${acc}  + ${el}: ${fileContentAfter[el]}\n  - ${el}: ${fileContentBefore[el]}\n`;
-  }, '');
-
-  return `{\n${fileDiff}}`;
+  return viewBuild(fileContentBefore, fileContentAfter);
 };

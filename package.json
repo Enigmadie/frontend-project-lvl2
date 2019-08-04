@@ -1,6 +1,6 @@
 {
   "name": "enigma-gendiff",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "cli app",
   "main": "dist/index.js",
   "bin": {
@@ -19,7 +19,7 @@
     "url": "git+https://github.com/Enigmadie/frontend-project-lvl2.git"
   },
   "author": "Al. Kh.",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Enigmadie/frontend-project-lvl2/issues"
   },
@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "commander": "^2.20.0",
+    "js-yaml": "^3.13.1",
     "lodash": "^4.17.15"
   },
   "keywords": [

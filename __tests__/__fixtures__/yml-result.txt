@@ -1,0 +1,11 @@
+{
+    host: hexlet.io
+  + timeout: 20
+  - timeout: 70
+  - proxy: 10.144.15.15
+  + language: java
+  - language: python
+    method: newUri
+  + dataKey: tray 17
+  + follow: false
+}

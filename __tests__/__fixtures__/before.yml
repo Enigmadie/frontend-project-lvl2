@@ -1,0 +1,5 @@
+host: hexlet.io
+timeout: 70
+proxy: 10.144.15.15
+language: python
+method: newUri

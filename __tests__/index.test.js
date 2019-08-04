@@ -7,5 +7,10 @@ const resultBuild = result => fs.readFileSync(pathBuild(result), 'utf-8');
 
 test('compare json files', () => {
   expect(gendiff(pathBuild('before.json'), pathBuild('after.json')))
-    .toBe(resultBuild('jsonResult.txt'));
+    .toBe(resultBuild('json-result.txt'));
+});
+
+test('compare yml files', () => {
+  expect(gendiff(pathBuild('before.yml'), pathBuild('after.yml')))
+    .toBe(resultBuild('yml-result.txt'));
 });
