@@ -10,3 +10,6 @@ Stage 5: compare flat yml files
 
 Stage 6: compare flat ini files
 <a href="https://asciinema.org/a/iTAT702C27xAM78cpKFl9wCg1" target="_blank"><img src="https://asciinema.org/a/iTAT702C27xAM78cpKFl9wCg1.svg" /></a>
+
+Stage 7: compare nested all format files
+<a href="https://asciinema.org/a/j5KFT0seFZzniF7w5dH9LsUEl" target="_blank"><img src="https://asciinema.org/a/j5KFT0seFZzniF7w5dH9LsUEl.svg" /></a>
