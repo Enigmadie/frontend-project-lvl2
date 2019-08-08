@@ -7,7 +7,26 @@
     },
     "setting4": "blah blah",
     "setting5": {
-      "key5": "value5"
+      "key5": {
+        "testIn1": {
+          "value": 444,
+          "textValue": "rewr",
+          "testIn2": {
+            "testIn3": {
+              "testIn4": {
+                "testIn5": {
+                  "value": 12,
+                  "nextValue": 19,
+                  "finalTest": {
+                    "final": 4444
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rer": "rewr"
+      }
     },
     "setting6": {
       "key": "value",

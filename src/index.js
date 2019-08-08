@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import viewBuild from './view-build';
+import render from './formatters';
 import parse from './parser';
 
-export default (fileBefore, fileAfter) => {
+export default (fileBefore, fileAfter, format) => {
   const pathExtNameBefore = path.extname(fileBefore);
   const pathExtNameAfter = path.extname(fileAfter);
 
@@ -21,5 +21,5 @@ export default (fileBefore, fileAfter) => {
   const fileContentBefore = parse[pathExtNameBefore](readFileBefore);
   const fileContentAfter = parse[pathExtNameAfter](readFileAfter);
 
-  return viewBuild(fileContentBefore, fileContentAfter);
+  return render[format](fileContentBefore, fileContentAfter);
 };
