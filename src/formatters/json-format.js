@@ -33,7 +33,6 @@ export default (file1, file2) => {
         default:
           return `    ${name}: ${afterValue}`;
       }
-    //  return null;
     };
 
     return `{\n${space(gap)}${iterAst.map(el => render(el)).join(`\n${space(gap)}`)}\n${space(gap)}}`;

@@ -20,17 +20,20 @@ test('compare ini files', () => {
     .toBe(resultBuild('result-ini.txt'));
 });
 
-test('compare nested json files', () => {
+test('compare json, ini, yml nested files json format', () => {
   expect(gendiff(pathBuild('before-nested.json'), pathBuild('after-nested.json'), 'json'))
-    .toBe(resultBuild('nested-result-json.txt'));
-});
-
-test('compare nested yml files', () => {
+    .toBe(resultBuild('nested-result-json-default.txt'));
   expect(gendiff(pathBuild('before-nested.yml'), pathBuild('after-nested.yml'), 'json'))
-    .toBe(resultBuild('nested-result-yml.txt'));
+    .toBe(resultBuild('nested-result-yml-default.txt'));
+  expect(gendiff(pathBuild('before-nested.ini'), pathBuild('after-nested.ini'), 'json'))
+    .toBe(resultBuild('nested-result-ini-default.txt'));
 });
 
-test('compare nested ini files', () => {
-  expect(gendiff(pathBuild('before-nested.ini'), pathBuild('after-nested.ini'), 'json'))
-    .toBe(resultBuild('nested-result-ini.txt'));
+test('compare json, ini, yml nested files plain format', () => {
+  expect(gendiff(pathBuild('before-nested.json'), pathBuild('after-nested.json'), 'plain'))
+    .toBe(resultBuild('nested-result-json-plain.txt'));
+  expect(gendiff(pathBuild('before-nested.yml'), pathBuild('after-nested.yml'), 'plain'))
+    .toBe(resultBuild('nested-result-yml-plain.txt'));
+  expect(gendiff(pathBuild('before-nested.ini'), pathBuild('after-nested.ini'), 'plain'))
+    .toBe(resultBuild('nested-result-ini-plain.txt'));
 });
