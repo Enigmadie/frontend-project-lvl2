@@ -12,11 +12,10 @@ const stringify = (value) => {
 };
 
 export default (file1, file2) => {
-  const iter = (before, after, nestedName) => {
-    const iterAst = dif(before, after);
-
+  const iterAst = dif(file1, file2);
+  const iter = (difData, nestedName) => {
     const render = ({
-      type, name, beforeValue, afterValue, children,
+      type, name, beforeValue, afterValue,
     }) => {
       switch (type) {
         case 'add':
@@ -24,16 +23,17 @@ export default (file1, file2) => {
         case 'delete':
           return `Property '${nestedName}${name}' was removed\n`;
         case 'update':
-          return (children.length > 0)
-            ? iter(beforeValue, afterValue, `${nestedName}${name}.`)
-            : `Property '${nestedName}${name}' was updated. From ${stringify(beforeValue)} to ${stringify(afterValue)}\n`;
+          return `Property '${nestedName}${name}' was updated. From ${stringify(beforeValue)} to ${stringify(afterValue)}\n`;
         default:
           return '';
       }
     };
 
-    return iterAst.map(el => render(el)).join('');
+    return difData.map(el => (el.children.length > 0
+      ? iter(el.children, `${nestedName}${el.name}.`)
+      : render(el)))
+      .join('');
   };
-  const iterate = iter(file1, file2, '');
-  return iterate.slice(0, iterate.length - 1);
+  const iterated = iter(iterAst, '');
+  return iterated.slice(0, iterated.length - 1);
 };

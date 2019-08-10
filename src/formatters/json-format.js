@@ -1,41 +1,40 @@
-import dif from '../dif';
+import dif, { isObject } from '../dif';
 
 const space = step => ' '.repeat(step);
-const defaultStep = 4;
-const stringifyStep = 8;
+const startGap = 2;
+const breakGap = 4;
 
-const stringify = (value, cond, stringifyGap) => {
-  const values = Object.keys(value);
-  if (cond) {
-    return `{\n${values.map(el => (typeof value[el] === 'object'
-      ? `${space(stringifyGap + stringifyStep)}${el}: ${stringify(value[el], true, stringifyGap + defaultStep)}`
-      : `${space(stringifyGap + stringifyStep)}${el}: ${value[el]}`)).join('\n')}\n${space(stringifyGap + defaultStep)}}`;
+const stringify = (value, gap) => {
+  if (isObject(value)) {
+    return `{\n${Object.keys(value).map(el => (isObject(value[el])
+      ? `${space(gap + breakGap)}  ${el}: ${stringify(value[el], gap + breakGap)}`
+      : `${space(gap + breakGap)}  ${el}: ${value[el]}`)).join('\n')}\n${space(gap)}  }`;
   }
   return value;
 };
 
 export default (file1, file2) => {
-  const iter = (before, after, gap) => {
-    const iterAst = dif(before, after);
-
+  const iterAst = dif(file1, file2);
+  const iter = (difData, gap) => {
     const render = ({
-      type, name, beforeValue, afterValue, isObject, children,
+      type, name, beforeValue, afterValue,
     }) => {
       switch (type) {
         case 'add':
-          return `  + ${name}: ${stringify(afterValue, isObject, gap)}`;
+          return `+ ${name}: ${stringify(afterValue, gap)}`;
         case 'delete':
-          return `  - ${name}: ${stringify(beforeValue, isObject, gap)}`;
+          return `- ${name}: ${stringify(beforeValue, gap)}`;
         case 'update':
-          return (children.length > 0)
-            ? `    ${name}: ${iter(beforeValue, afterValue, gap + defaultStep)}`
-            : `  + ${name}: ${stringify(afterValue, isObject[0], gap)}\n${space(gap)}  - ${name}: ${stringify(beforeValue, isObject[1], gap)}`;
+          return `+ ${name}: ${stringify(afterValue, gap)}\n${space(gap)}- ${name}: ${stringify(beforeValue, gap)}`;
         default:
-          return `    ${name}: ${afterValue}`;
+          return `  ${name}: ${afterValue}`;
       }
     };
 
-    return `{\n${space(gap)}${iterAst.map(el => render(el)).join(`\n${space(gap)}`)}\n${space(gap)}}`;
+    return `{\n${space(gap)}${difData.map(el => (el.children.length > 0
+      ? `  ${el.name}: ${iter(el.children, gap + breakGap)}\n${space(gap)}  }`
+      : render(el)))
+      .join(`\n${space(gap)}`)}`;
   };
-  return iter(file1, file2, 0);
+  return `${iter(iterAst, startGap)}\n}`;
 };
