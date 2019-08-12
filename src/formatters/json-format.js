@@ -1,10 +1,10 @@
-import dif, { isObject } from '../dif';
+import genDif, { isObject } from '../dif';
 
 const genJsonData = obj => JSON.stringify(obj).slice(1, -1);
 const selectType = type => (isObject(type) ? 'nested' : 'flow');
 
 export default (file1, file2) => {
-  const iterAst = dif(file1, file2);
+  const iterAst = genDif(file1, file2);
 
   const iter = (difData) => {
     const render = ({

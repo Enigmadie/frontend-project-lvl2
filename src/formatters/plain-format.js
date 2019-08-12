@@ -1,4 +1,4 @@
-import dif from '../dif';
+import genDif from '../dif';
 
 const stringify = (value) => {
   switch (true) {
@@ -14,7 +14,7 @@ const stringify = (value) => {
 };
 
 export default (file1, file2) => {
-  const iterAst = dif(file1, file2);
+  const iterAst = genDif(file1, file2);
 
   const iter = (difData, nestedName) => {
     const render = ({
