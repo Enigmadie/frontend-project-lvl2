@@ -1,11 +1,13 @@
 import dif from '../dif';
 
 const stringify = (value) => {
-  switch (typeof value) {
-    case 'string':
+  switch (true) {
+    case typeof value === 'string':
       return `'${value}'`;
-    case 'object':
-      return value !== null ? '[complex value]' : null;
+    case value instanceof Array:
+      return `[${value.join(', ')}]`;
+    case value instanceof Object:
+      return '[complex value]';
     default:
       return value;
   }
@@ -13,9 +15,10 @@ const stringify = (value) => {
 
 export default (file1, file2) => {
   const iterAst = dif(file1, file2);
+
   const iter = (difData, nestedName) => {
     const render = ({
-      type, name, beforeValue, afterValue,
+      type, name, beforeValue, afterValue, children,
     }) => {
       switch (type) {
         case 'add':
@@ -23,17 +26,15 @@ export default (file1, file2) => {
         case 'delete':
           return `Property '${nestedName}${name}' was removed\n`;
         case 'update':
-          return `Property '${nestedName}${name}' was updated. From ${stringify(beforeValue)} to ${stringify(afterValue)}\n`;
+          return children.length > 0
+            ? iter(children, `${nestedName}${name}.`)
+            : `Property '${nestedName}${name}' was updated. From ${stringify(beforeValue)} to ${stringify(afterValue)}\n`;
         default:
           return '';
       }
     };
 
-    return difData.map(el => (el.children.length > 0
-      ? iter(el.children, `${nestedName}${el.name}.`)
-      : render(el)))
-      .join('');
+    return difData.map(el => render(el)).join('');
   };
-  const iterated = iter(iterAst, '');
-  return iterated.slice(0, iterated.length - 1);
+  return iter(iterAst, '').slice(0, -1);
 };

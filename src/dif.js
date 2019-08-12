@@ -1,6 +1,7 @@
 import { has, every } from 'lodash';
 
-export const isObject = (...items) => every(items.map(el => typeof el === 'object' && el !== null));
+export const isObject = (...items) => every(items
+  .map(el => el instanceof Object && !(el instanceof Array)));
 
 const propertyActions = [
   {
