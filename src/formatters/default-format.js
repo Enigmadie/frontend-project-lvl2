@@ -7,9 +7,10 @@ const breakGap = 4;
 
 const stringify = (value, gap) => {
   if (isObject(value)) {
-    return `{\n${Object.keys(value).map(el => (isObject(value[el])
-      ? `${skip(gap + breakGap)}  ${el}: ${stringify(value[el], gap + breakGap)}`
-      : `${skip(gap + breakGap)}  ${el}: ${rebuildValue(value[el])}`)).join('\n')}\n${skip(gap)}  }`;
+    return `{\n${Object.keys(value).map(el => (
+      `${skip(gap + breakGap)}  ${el}: ${isObject(value[el])
+        ? stringify(value[el], gap + breakGap)
+        : rebuildValue(value[el])}`)).join('\n')}\n${skip(gap)}  }`;
   }
   return rebuildValue(value);
 };
