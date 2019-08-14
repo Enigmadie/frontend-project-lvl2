@@ -14,26 +14,24 @@ const stringify = (value, gap) => {
       ? stringify(value[el], gap + breakGap)
       : rebuildValue(value[el])}`)).join('\n')}\n${skip(gap)}  }`;
 };
-export default (astData) => {
-  const iter = (difData, gap) => {
-    const render = ({
-      type, name, beforeValue, afterValue, children,
-    }) => {
-      switch (type) {
-        case 'add':
-          return `+ ${name}: ${stringify(afterValue, gap)}`;
-        case 'delete':
-          return `- ${name}: ${stringify(beforeValue, gap)}`;
-        case 'update':
-          return children.length > 0
-            ? `  ${name}: ${iter(children, gap + breakGap)}\n${skip(gap)}  }`
-            : `+ ${name}: ${stringify(afterValue, gap)}\n${skip(gap)}- ${name}: ${stringify(beforeValue, gap)}`;
-        default:
-          return `  ${name}: ${stringify(afterValue, gap)}`;
-      }
-    };
-    return `{\n${skip(gap)}${difData.map(el => render(el)).join(`\n${skip(gap)}`)}`;
+const render = (difData, gap) => {
+  const getLine = ({
+    type, name, beforeValue, afterValue, children,
+  }) => {
+    switch (type) {
+      case 'add':
+        return `+ ${name}: ${stringify(afterValue, gap)}`;
+      case 'delete':
+        return `- ${name}: ${stringify(beforeValue, gap)}`;
+      case 'update':
+        return children.length > 0
+          ? `  ${name}: ${render(children, gap + breakGap)}\n${skip(gap)}  }`
+          : `+ ${name}: ${stringify(afterValue, gap)}\n${skip(gap)}- ${name}: ${stringify(beforeValue, gap)}`;
+      default:
+        return `  ${name}: ${stringify(afterValue, gap)}`;
+    }
   };
-
-  return `${iter(astData, startGap)}\n}`;
+  return `{\n${skip(gap)}${difData.map(el => getLine(el)).join(`\n${skip(gap)}`)}`;
 };
+
+export default astData => `${render(astData, startGap)}\n}`;
