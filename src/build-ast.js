@@ -1,7 +1,5 @@
-import { has, every } from 'lodash';
-
-export const isObject = (...items) => every(items
-  .map(el => el instanceof Object && !(el instanceof Array)));
+import { has } from 'lodash';
+import isObject from './utils';
 
 const propertyActions = [
   {
@@ -32,7 +30,7 @@ const getPropertyActions = (arg1, arg2, value) => (
   propertyActions.find(({ check }) => check(arg1, arg2, value))
 );
 
-const genDif = (before, after) => {
+const genDifAst = (before, after) => {
   const fileKeys = Object.keys({ ...before, ...after });
 
   const iterAst = fileKeys.reduce((acc, name) => {
@@ -42,10 +40,10 @@ const genDif = (before, after) => {
       name,
       beforeValue: before[name],
       afterValue: after[name],
-      children: children(genDif, before, after, name),
+      children: children(genDifAst, before, after, name),
     };
     return [...acc, format];
   }, []);
   return iterAst;
 };
-export default genDif;
+export default genDifAst;

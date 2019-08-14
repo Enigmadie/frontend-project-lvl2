@@ -1,25 +1,23 @@
 import fs from 'fs';
 import path from 'path';
 import render from './formatters';
-import parse from './parser';
+import parse from './parsers';
+import buildAst from './build-ast';
 
-export default (fileBefore, fileAfter, format) => {
-  const pathExtNameBefore = path.extname(fileBefore);
-  const pathExtNameAfter = path.extname(fileAfter);
+const getFileContent = (filepath, extName) => fs.readFileSync(filepath, 'utf-8')
+  |> (_ => parse(_, extName));
 
-  if (!(pathExtNameBefore in parse) || !(pathExtNameAfter in parse)) {
-    throw new Error('Format is not valid');
-  }
+export default (fileBefore, fileAfter, format = 'diff') => {
+  const extNameBefore = path.extname(fileBefore);
+  const extNameAfter = path.extname(fileAfter);
 
-  if (pathExtNameBefore !== pathExtNameAfter) {
+  if (extNameBefore !== extNameAfter) {
     throw new Error('Formats are not equal');
   }
 
-  const readFileBefore = fs.readFileSync(fileBefore, 'utf-8');
-  const readFileAfter = fs.readFileSync(fileAfter, 'utf-8');
+  const fileContentBefore = getFileContent(fileBefore, extNameBefore);
+  const fileContentAfter = getFileContent(fileAfter, extNameAfter);
 
-  const fileContentBefore = parse[pathExtNameBefore](readFileBefore);
-  const fileContentAfter = parse[pathExtNameAfter](readFileAfter);
-
-  return render[format](fileContentBefore, fileContentAfter);
+  return buildAst(fileContentBefore, fileContentAfter)
+    |> (_ => render(_, format));
 };

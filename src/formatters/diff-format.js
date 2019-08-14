@@ -1,4 +1,4 @@
-import genDif, { isObject } from '../dif';
+import isObject from '../utils';
 
 const rebuildValue = value => (value instanceof Array ? `[${value.join(', ')}]` : value);
 const skip = step => ' '.repeat(step);
@@ -6,18 +6,15 @@ const startGap = 2;
 const breakGap = 4;
 
 const stringify = (value, gap) => {
-  if (isObject(value)) {
-    return `{\n${Object.keys(value).map(el => (
-      `${skip(gap + breakGap)}  ${el}: ${isObject(value[el])
-        ? stringify(value[el], gap + breakGap)
-        : rebuildValue(value[el])}`)).join('\n')}\n${skip(gap)}  }`;
+  if (!isObject(value)) {
+    return rebuildValue(value);
   }
-  return rebuildValue(value);
+  return `{\n${Object.keys(value).map(el => (
+    `${skip(gap + breakGap)}  ${el}: ${isObject(value[el])
+      ? stringify(value[el], gap + breakGap)
+      : rebuildValue(value[el])}`)).join('\n')}\n${skip(gap)}  }`;
 };
-
-export default (file1, file2) => {
-  const iterAst = genDif(file1, file2);
-
+export default (astData) => {
   const iter = (difData, gap) => {
     const render = ({
       type, name, beforeValue, afterValue, children,
@@ -35,8 +32,8 @@ export default (file1, file2) => {
           return `  ${name}: ${stringify(afterValue, gap)}`;
       }
     };
-
     return `{\n${skip(gap)}${difData.map(el => render(el)).join(`\n${skip(gap)}`)}`;
   };
-  return `${iter(iterAst, startGap)}\n}`;
+
+  return `${iter(astData, startGap)}\n}`;
 };

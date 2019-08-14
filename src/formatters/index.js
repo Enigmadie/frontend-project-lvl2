@@ -1,9 +1,13 @@
-import defaultFormat from './default-format';
+import defaultFormat from './diff-format';
 import plainFormat from './plain-format';
 import jsonFormat from './json-format';
 
-export default {
-  default: (file1, file2) => defaultFormat(file1, file2),
-  plain: (file1, file2) => plainFormat(file1, file2),
-  json: (file1, file2) => jsonFormat(file1, file2),
+export default (astData, format) => {
+  const formatSelection = {
+    diff: defaultFormat,
+    plain: plainFormat,
+    json: jsonFormat,
+  };
+
+  return formatSelection[format](astData);
 };

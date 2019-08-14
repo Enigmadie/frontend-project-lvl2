@@ -1,6 +1,6 @@
 {
   "name": "enigma-gendiff",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "cli app",
   "main": "dist/index.js",
   "bin": {
@@ -28,6 +28,7 @@
     "@babel/cli": "^7.5.5",
     "@babel/core": "^7.5.5",
     "@babel/node": "^7.5.5",
+    "@babel/plugin-proposal-pipeline-operator": "^7.5.0",
     "@babel/preset-env": "^7.5.5",
     "babel-eslint": "^10.0.2",
     "babel-jest": "^24.8.0",

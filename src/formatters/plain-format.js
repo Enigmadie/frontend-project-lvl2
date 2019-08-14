@@ -1,5 +1,3 @@
-import genDif from '../dif';
-
 const stringify = (value) => {
   switch (true) {
     case typeof value === 'string':
@@ -13,9 +11,7 @@ const stringify = (value) => {
   }
 };
 
-export default (file1, file2) => {
-  const iterAst = genDif(file1, file2);
-
+export default (astData) => {
   const iter = (difData, nestedName) => {
     const render = ({
       type, name, beforeValue, afterValue, children,
@@ -36,5 +32,5 @@ export default (file1, file2) => {
 
     return difData.map(el => render(el)).join('');
   };
-  return iter(iterAst, '').slice(0, -1);
+  return iter(astData, '').slice(0, -1);
 };
