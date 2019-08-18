@@ -1,6 +1,6 @@
-import isObject from '../utils';
+import { isPlainObject as isObject, isArray } from 'lodash';
 
-const rebuildValue = value => (value instanceof Array ? `[${value.join(', ')}]` : value);
+const rebuildValue = value => (isArray(value) ? `[${value.join(', ')}]` : value);
 const skip = step => ' '.repeat(step);
 const startGap = 2;
 const breakGap = 4;
@@ -16,19 +16,19 @@ const stringify = (value, gap) => {
 };
 const render = (difData, gap) => {
   const getLine = ({
-    type, name, beforeValue, afterValue, children,
+    type, name, value, beforeValue, afterValue, children,
   }) => {
     switch (type) {
-      case 'add':
-        return `+ ${name}: ${stringify(afterValue, gap)}`;
-      case 'delete':
-        return `- ${name}: ${stringify(beforeValue, gap)}`;
-      case 'update':
-        return children.length > 0
-          ? `  ${name}: ${render(children, gap + breakGap)}\n${skip(gap)}  }`
-          : `+ ${name}: ${stringify(afterValue, gap)}\n${skip(gap)}- ${name}: ${stringify(beforeValue, gap)}`;
+      case 'added':
+        return `+ ${name}: ${stringify(value, gap)}`;
+      case 'deleted':
+        return `- ${name}: ${stringify(value, gap)}`;
+      case 'updated':
+        return `+ ${name}: ${stringify(afterValue, gap)}\n${skip(gap)}- ${name}: ${stringify(beforeValue, gap)}`;
+      case 'node':
+        return `  ${name}: ${render(children, gap + breakGap)}\n${skip(gap)}  }`;
       default:
-        return `  ${name}: ${stringify(afterValue, gap)}`;
+        return `  ${name}: ${stringify(value, gap)}`;
     }
   };
   return `{\n${skip(gap)}${difData.map(el => getLine(el)).join(`\n${skip(gap)}`)}`;

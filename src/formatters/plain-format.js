@@ -13,17 +13,17 @@ const stringify = (value) => {
 
 const render = (difData, nestedName) => {
   const getLine = ({
-    type, name, beforeValue, afterValue, children,
+    type, name, value, beforeValue, afterValue, children,
   }) => {
     switch (type) {
-      case 'add':
-        return `Property '${nestedName}${name}' was added with value: ${stringify(afterValue)}\n`;
-      case 'delete':
+      case 'added':
+        return `Property '${nestedName}${name}' was added with value: ${stringify(value)}\n`;
+      case 'deleted':
         return `Property '${nestedName}${name}' was removed\n`;
-      case 'update':
-        return children.length > 0
-          ? render(children, `${nestedName}${name}.`)
-          : `Property '${nestedName}${name}' was updated. From ${stringify(beforeValue)} to ${stringify(afterValue)}\n`;
+      case 'updated':
+        return `Property '${nestedName}${name}' was updated. From ${stringify(beforeValue)} to ${stringify(afterValue)}\n`;
+      case 'node':
+        return render(children, `${nestedName}${name}.`);
       default:
         return '';
     }

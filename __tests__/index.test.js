@@ -1,15 +1,15 @@
 import fs from 'fs';
 import genDiff from '../src';
 
-const pathBuild = path => `${__dirname}/__fixtures__/${path}`;
+const buildPath = path => `${__dirname}/__fixtures__/${path}`;
 
-const resultBuild = result => fs.readFileSync(pathBuild(result), 'utf-8');
+const resultBuild = result => fs.readFileSync(buildPath(result), 'utf-8');
 
 const testModules = (name, testData) => {
   test(name, () => {
     testData.map(([beforeDifFile, afterDifFile, comparedDifFile, format]) => {
-      const beforeDifFilePath = pathBuild(beforeDifFile);
-      const afterDifFilePath = pathBuild(afterDifFile);
+      const beforeDifFilePath = buildPath(beforeDifFile);
+      const afterDifFilePath = buildPath(afterDifFile);
 
       const expectedValue = resultBuild(comparedDifFile);
       const actualValue = genDiff(beforeDifFilePath, afterDifFilePath, format);
