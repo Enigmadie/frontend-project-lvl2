@@ -18,7 +18,7 @@ const render = (difData) => {
         return '';
     }
   };
-  return difData.filter(el => el.type !== 'unchanged')
+  return difData.filter(({ type }) => type !== 'unchanged')
     .map(el => `{${genJsonData({ key: el.name, option: el.type })}${getLine(el)}}`).join(',');
 };
 

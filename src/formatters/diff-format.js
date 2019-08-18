@@ -1,4 +1,4 @@
-import { isPlainObject as isObject, isArray } from 'lodash';
+import { isPlainObject as isObject, isArray, keys } from 'lodash';
 
 const rebuildValue = value => (isArray(value) ? `[${value.join(', ')}]` : value);
 const skip = step => ' '.repeat(step);
@@ -9,10 +9,11 @@ const stringify = (value, gap) => {
   if (!isObject(value)) {
     return rebuildValue(value);
   }
-  return `{\n${Object.keys(value).map(el => (
+  return `{\n${keys(value).map(el => (
     `${skip(gap + breakGap)}  ${el}: ${isObject(value[el])
       ? stringify(value[el], gap + breakGap)
-      : rebuildValue(value[el])}`)).join('\n')}\n${skip(gap)}  }`;
+      : rebuildValue(value[el])}`))
+    .join('\n')}\n${skip(gap)}  }`;
 };
 const render = (difData, gap) => {
   const getLine = ({
