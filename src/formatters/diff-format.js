@@ -31,7 +31,7 @@ const render = (difData, gap) => {
     });
     return linesSelection[type]();
   };
-  
+
   return difData.map(el => getLine(el))
   |> flattenDeep
   |> (_ => _.map(el => `${skip(gap)}${el}`))

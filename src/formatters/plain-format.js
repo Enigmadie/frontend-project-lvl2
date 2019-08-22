@@ -23,7 +23,7 @@ const render = (difData, nestedName) => {
     };
     return linesSelection[type]();
   };
-  
+
   return difData.filter(({ type }) => type !== 'unchanged')
     .map(el => getLine(el))
     .join('\n');
