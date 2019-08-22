@@ -4,25 +4,25 @@ import {
 
 const propertyActions = [
   {
-    check: (first, second, name) => !has(first, name),
-    form: (first, second, name) => ({ type: 'added', name, value: second }),
+    check: (beforeDif, afterDif, name) => !has(beforeDif, name),
+    form: (beforeDif, afterDif, name) => ({ type: 'added', name, value: afterDif }),
   },
   {
-    check: (first, second, name) => !has(second, name),
-    form: (first, second, name) => ({ type: 'deleted', name, value: first }),
+    check: (beforeDif, afterDif, name) => !has(afterDif, name),
+    form: (beforeDif, afterDif, name) => ({ type: 'deleted', name, value: beforeDif }),
   },
   {
-    check: (first, second, name) => first[name] === second[name],
-    form: (first, second, name) => ({ type: 'unchanged', name, value: second }),
+    check: (beforeDif, afterDif, name) => beforeDif[name] === afterDif[name],
+    form: (beforeDif, afterDif, name) => ({ type: 'unchanged', name, value: afterDif }),
   },
   {
-    check: (first, second, name) => isObject(first[name]) && isObject(second[name]),
-    form: (first, second, name, func) => ({ type: 'node', name, children: func(first, second) }),
+    check: (beforeDif, afterDif, name) => isObject(beforeDif[name]) && isObject(afterDif[name]),
+    form: (beforeDif, afterDif, name, func) => ({ type: 'node', name, children: func(beforeDif, afterDif) }),
   },
   {
-    check: (first, second, name) => first[name] !== second[name],
-    form: (first, second, name) => ({
-      type: 'updated', name, beforeValue: first, afterValue: second,
+    check: (beforeDif, afterDif, name) => beforeDif[name] !== afterDif[name],
+    form: (beforeDif, afterDif, name) => ({
+      type: 'updated', name, beforeValue: beforeDif, afterValue: afterDif,
     }),
   },
 
@@ -32,12 +32,15 @@ const getPropertyActions = (arg1, arg2, value) => (
   propertyActions.find(({ check }) => check(arg1, arg2, value))
 );
 
-const genDifAst = (before, after) => {
-  const fileKeys = union(keys(before), keys(after));
+const genDifAst = (beforeDif, afterDif) => {
+  const keysBeforeDif = keys(beforeDif);
+  const keysAfterDif = keys(afterDif);
 
-  const iterAst = fileKeys.map((name) => {
-    const { form } = getPropertyActions(before, after, name);
-    return form(before[name], after[name], name, genDifAst);
+  const commonKeys = union(keysBeforeDif, keysAfterDif);
+
+  const iterAst = commonKeys.map((name) => {
+    const { form } = getPropertyActions(beforeDif, afterDif, name);
+    return form(beforeDif[name], afterDif[name], name, genDifAst);
   });
   return iterAst;
 };

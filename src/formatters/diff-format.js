@@ -1,4 +1,6 @@
-import { isPlainObject as isObject, isArray, keys } from 'lodash';
+import {
+  isPlainObject as isObject, isArray, keys, flattenDeep,
+} from 'lodash';
 
 const rebuildValue = value => (isArray(value) ? `[${value.join(', ')}]` : value);
 const skip = step => ' '.repeat(step);
@@ -15,24 +17,25 @@ const stringify = (value, gap) => {
       : rebuildValue(value[el])}`))
     .join('\n')}\n${skip(gap)}  }`;
 };
+
 const render = (difData, gap) => {
   const getLine = ({
     type, name, value, beforeValue, afterValue, children,
   }) => {
-    switch (type) {
-      case 'added':
-        return `+ ${name}: ${stringify(value, gap)}`;
-      case 'deleted':
-        return `- ${name}: ${stringify(value, gap)}`;
-      case 'updated':
-        return `+ ${name}: ${stringify(afterValue, gap)}\n${skip(gap)}- ${name}: ${stringify(beforeValue, gap)}`;
-      case 'node':
-        return `  ${name}: ${render(children, gap + breakGap)}\n${skip(gap)}  }`;
-      default:
-        return `  ${name}: ${stringify(value, gap)}`;
-    }
+    const linesSelection = ({
+      added: () => `+ ${name}: ${stringify(value, gap)}`,
+      deleted: () => `- ${name}: ${stringify(value, gap)}`,
+      updated: () => [`+ ${name}: ${stringify(afterValue, gap)}`, `- ${name}: ${stringify(beforeValue, gap)}`],
+      node: () => `  ${name}: {\n${render(children, gap + breakGap)}\n${skip(gap)}  }`,
+      unchanged: () => `  ${name}: ${stringify(value, gap)}`,
+    });
+    return linesSelection[type]();
   };
-  return `{\n${skip(gap)}${difData.map(el => getLine(el)).join(`\n${skip(gap)}`)}`;
+  
+  return difData.map(el => getLine(el))
+  |> flattenDeep
+  |> (_ => _.map(el => `${skip(gap)}${el}`))
+  |> (_ => _.join('\n'));
 };
 
-export default astData => `${render(astData, startGap)}\n}`;
+export default astData => `{\n${render(astData, startGap)}\n}`;

@@ -15,20 +15,18 @@ const render = (difData, nestedName) => {
   const getLine = ({
     type, name, value, beforeValue, afterValue, children,
   }) => {
-    switch (type) {
-      case 'added':
-        return `Property '${nestedName}${name}' was added with value: ${stringify(value)}\n`;
-      case 'deleted':
-        return `Property '${nestedName}${name}' was removed\n`;
-      case 'updated':
-        return `Property '${nestedName}${name}' was updated. From ${stringify(beforeValue)} to ${stringify(afterValue)}\n`;
-      case 'node':
-        return render(children, `${nestedName}${name}.`);
-      default:
-        return '';
-    }
+    const linesSelection = {
+      added: () => `Property '${nestedName}${name}' was added with value: ${stringify(value)}`,
+      deleted: () => `Property '${nestedName}${name}' was removed`,
+      updated: () => `Property '${nestedName}${name}' was updated. From ${stringify(beforeValue)} to ${stringify(afterValue)}`,
+      node: () => render(children, `${nestedName}${name}.`),
+    };
+    return linesSelection[type]();
   };
-  return difData.map(el => getLine(el)).join('');
+  
+  return difData.filter(({ type }) => type !== 'unchanged')
+    .map(el => getLine(el))
+    .join('\n');
 };
 
-export default astData => render(astData, '').slice(0, -1);
+export default astData => render(astData, '');

@@ -7,19 +7,18 @@ const render = (difData) => {
   const getLine = ({
     type, value, beforeValue, afterValue, children,
   }) => {
-    switch (type) {
-      case 'added':
-        return `,${genJsonData({ type: selectType(value), added: value })}`;
-      case 'updated':
-        return `,${genJsonData({ type: selectType(afterValue), added: afterValue, deleted: beforeValue })}`;
-      case 'node':
-        return `,${genJsonData({ type: 'nested' })},"children":[${render(children)}]`;
-      default:
-        return '';
-    }
+    const linesSelection = {
+      added: () => `,${genJsonData({ type: selectType(value), added: value })}`,
+      deleted: () => '',
+      updated: () => `,${genJsonData({ type: selectType(afterValue), added: afterValue, deleted: beforeValue })}`,
+      node: () => `,${genJsonData({ type: 'nested' })},"children":[${render(children)}]`,
+    };
+    return linesSelection[type]();
   };
+  
   return difData.filter(({ type }) => type !== 'unchanged')
-    .map(el => `{${genJsonData({ key: el.name, option: el.type })}${getLine(el)}}`).join(',');
+    .map(el => `{${genJsonData({ key: el.name, option: el.type })}${getLine(el)}}`)
+    .join(',');
 };
 
 export default astData => `[${render(astData)}]`;
