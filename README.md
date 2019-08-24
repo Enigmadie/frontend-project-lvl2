@@ -18,4 +18,4 @@ Stage 8: compare nested all types plain view files
 <a href="https://asciinema.org/a/al7VPYtMmZ0oJemT1sr5kDo3p" target="_blank"><img src="https://asciinema.org/a/al7VPYtMmZ0oJemT1sr5kDo3p.svg" /></a>
 
 Stage 9: compare nested all types json view viles
-<a href="https://asciinema.org/a/MEUUMSFlhS5oUUqZZDAo7gF7Y" target="_blank"><img src="https://asciinema.org/a/MEUUMSFlhS5oUUqZZDAo7gF7Y.svg" /></a>
+<a href="https://asciinema.org/a/RSWKkFPT76ZmrC3iApk43XxBE" target="_blank"><img src="https://asciinema.org/a/RSWKkFPT76ZmrC3iApk43XxBE.svg" /></a>

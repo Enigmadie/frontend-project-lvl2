@@ -7,9 +7,9 @@ const fileExtNameSelection = {
   '.ini': ini.parse,
 };
 
-export default (data, extName) => {
+export default (content, extName) => {
   if (!(extName in fileExtNameSelection)) {
     throw new Error(`Format ${extName} is not valid`);
   }
-  return fileExtNameSelection[extName](data);
+  return fileExtNameSelection[extName](content);
 };

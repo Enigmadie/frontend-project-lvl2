@@ -1,5 +1,5 @@
 import {
-  isPlainObject as isObject, isArray, keys, flattenDeep,
+  isPlainObject, isArray, keys, flattenDeep,
 } from 'lodash';
 
 const rebuildValue = value => (isArray(value) ? `[${value.join(', ')}]` : value);
@@ -8,11 +8,11 @@ const startGap = 2;
 const breakGap = 4;
 
 const stringify = (value, gap) => {
-  if (!isObject(value)) {
+  if (!isPlainObject(value)) {
     return rebuildValue(value);
   }
   return `{\n${keys(value).map(el => (
-    `${skip(gap + breakGap)}  ${el}: ${isObject(value[el])
+    `${skip(gap + breakGap)}  ${el}: ${isPlainObject(value[el])
       ? stringify(value[el], gap + breakGap)
       : rebuildValue(value[el])}`))
     .join('\n')}\n${skip(gap)}  }`;

@@ -4,25 +4,49 @@ import {
 
 const propertyActions = [
   {
-    check: (beforeDif, afterDif, name) => !has(beforeDif, name),
-    form: (beforeDif, afterDif, name) => ({ type: 'added', name, value: afterDif }),
+    check: (contentBeforeDif, contentAfterDif, key) => (
+      !has(contentBeforeDif, key)),
+    form: (valueBeforeDif, valueAfterDif, name) => ({
+      type: 'added',
+      name,
+      value: valueAfterDif,
+    }),
   },
   {
-    check: (beforeDif, afterDif, name) => !has(afterDif, name),
-    form: (beforeDif, afterDif, name) => ({ type: 'deleted', name, value: beforeDif }),
+    check: (contentBeforeDif, contentAfterDif, key) => (
+      !has(contentAfterDif, key)),
+    form: (valueBeforeDif, valueAfterDif, name) => ({
+      type: 'deleted',
+      name,
+      value: valueBeforeDif,
+    }),
   },
   {
-    check: (beforeDif, afterDif, name) => beforeDif[name] === afterDif[name],
-    form: (beforeDif, afterDif, name) => ({ type: 'unchanged', name, value: afterDif }),
+    check: (contentBeforeDif, contentAfterDif, key) => (
+      contentBeforeDif[key] === contentAfterDif[key]),
+    form: (valueBeforeDif, valueAfterDif, name) => ({
+      type: 'unchanged',
+      name,
+      value: valueAfterDif,
+    }),
   },
   {
-    check: (beforeDif, afterDif, name) => isObject(beforeDif[name]) && isObject(afterDif[name]),
-    form: (beforeDif, afterDif, name, func) => ({ type: 'node', name, children: func(beforeDif, afterDif) }),
+    check: (contentBeforeDif, contentAfterDif, key) => (
+      isObject(contentBeforeDif[key]) && isObject(contentAfterDif[key])),
+    form: (valueBeforeDif, valueAfterDif, name, func) => ({
+      type: 'node',
+      name,
+      children: func(valueBeforeDif, valueAfterDif),
+    }),
   },
   {
-    check: (beforeDif, afterDif, name) => beforeDif[name] !== afterDif[name],
-    form: (beforeDif, afterDif, name) => ({
-      type: 'updated', name, beforeValue: beforeDif, afterValue: afterDif,
+    check: (contentBeforeDif, contentAfterDif, key) => (
+      contentBeforeDif[key] !== contentAfterDif[key]),
+    form: (valueBeforeDif, valueAfterDif, name) => ({
+      type: 'updated',
+      name,
+      beforeValue: valueBeforeDif,
+      afterValue: valueAfterDif,
     }),
   },
 
@@ -32,15 +56,15 @@ const getPropertyActions = (arg1, arg2, value) => (
   propertyActions.find(({ check }) => check(arg1, arg2, value))
 );
 
-const genDifAst = (beforeDif, afterDif) => {
-  const keysBeforeDif = keys(beforeDif);
-  const keysAfterDif = keys(afterDif);
+const genDifAst = (contentBeforeDif, contentAfterDif) => {
+  const keysBeforeDif = keys(contentBeforeDif);
+  const keysAfterDif = keys(contentAfterDif);
 
   const commonKeys = union(keysBeforeDif, keysAfterDif);
 
-  const iterAst = commonKeys.map((name) => {
-    const { form } = getPropertyActions(beforeDif, afterDif, name);
-    return form(beforeDif[name], afterDif[name], name, genDifAst);
+  const iterAst = commonKeys.map((key) => {
+    const { form } = getPropertyActions(contentBeforeDif, contentAfterDif, key);
+    return form(contentBeforeDif[key], contentAfterDif[key], key, genDifAst);
   });
   return iterAst;
 };

@@ -7,17 +7,17 @@ import buildAst from './build-ast';
 const getFileContent = (filepath, extName) => fs.readFileSync(filepath, 'utf-8')
   |> (_ => parse(_, extName));
 
-export default (fileBefore, fileAfter, format = 'diff') => {
-  const extNameBefore = path.extname(fileBefore);
-  const extNameAfter = path.extname(fileAfter);
+export default (filepathBeforeDif, filepathAfterDif, format = 'diff') => {
+  const extNameBeforeDif = path.extname(filepathBeforeDif);
+  const extNameAfterDif = path.extname(filepathAfterDif);
 
-  if (extNameBefore !== extNameAfter) {
+  if (extNameBeforeDif !== extNameAfterDif) {
     throw new Error('Formats are not equal');
   }
 
-  const fileContentBefore = getFileContent(fileBefore, extNameBefore);
-  const fileContentAfter = getFileContent(fileAfter, extNameAfter);
+  const contentBeforeDif = getFileContent(filepathBeforeDif, extNameBeforeDif);
+  const contentAfterDif = getFileContent(filepathAfterDif, extNameAfterDif);
 
-  return buildAst(fileContentBefore, fileContentAfter)
+  return buildAst(contentBeforeDif, contentAfterDif)
     |> (_ => render(_, format));
 };
