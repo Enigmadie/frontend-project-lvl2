@@ -11,22 +11,21 @@ const stringify = (value) => {
   }
 };
 
-const render = (difData, nestedName) => {
-  const getLine = ({
-    type, name, value, beforeValue, afterValue, children,
-  }) => {
-    const linesSelection = {
-      added: () => `Property '${nestedName}${name}' was added with value: ${stringify(value)}`,
-      deleted: () => `Property '${nestedName}${name}' was removed`,
-      updated: () => `Property '${nestedName}${name}' was updated. From ${stringify(beforeValue)} to ${stringify(afterValue)}`,
-      node: () => render(children, `${nestedName}${name}.`),
-    };
-    return linesSelection[type]();
+const getLine = ({
+  type, name, value, valueBefore, valueAfter, children,
+}, nestedName, func) => {
+  const linesSelection = {
+    added: () => `Property '${nestedName}${name}' was added with value: ${stringify(value)}`,
+    deleted: () => `Property '${nestedName}${name}' was removed`,
+    updated: () => `Property '${nestedName}${name}' was updated. From ${stringify(valueBefore)} to ${stringify(valueAfter)}`,
+    node: () => func(children, `${nestedName}${name}.`),
   };
-
-  return difData.filter(({ type }) => type !== 'unchanged')
-    .map(el => getLine(el))
-    .join('\n');
+  return linesSelection[type]();
 };
 
-export default astData => render(astData, '');
+const render = (difData, nestedName = '') => difData
+  .filter(({ type }) => type !== 'unchanged')
+  .map(el => getLine(el, nestedName, render))
+  .join('\n');
+
+export default astData => render(astData);

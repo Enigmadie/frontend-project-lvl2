@@ -8,9 +8,9 @@ program
   .version(version)
   .description('Compares two configuration files and shows a difference.')
   .option('-f, --format [type]', 'Output format')
-  .arguments('<filepathBeforeDif> <filepathAfterDif>')
-  .action((filepathBeforeDif, filepathAfterDif) => {
-    console.log(genDiff(filepathBeforeDif, filepathAfterDif, program.format));
+  .arguments('<firstFilepath> <secondFilepath>')
+  .action((firstFilepath, secondFilepath) => {
+    console.log(genDiff(firstFilepath, secondFilepath, program.format));
   });
 
 program.parse(process.argv);

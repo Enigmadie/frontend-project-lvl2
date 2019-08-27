@@ -3,39 +3,38 @@ import {
 } from 'lodash';
 
 const rebuildValue = value => (isArray(value) ? `[${value.join(', ')}]` : value);
-const skip = step => ' '.repeat(step);
-const startGap = 2;
-const breakGap = 4;
+const skip = depth => `  ${'    '.repeat(depth)}`;
+const rootNodeDepth = 0;
+const levelDepth = 1;
 
-const stringify = (value, gap) => {
+const stringify = (value, depth) => {
   if (!isPlainObject(value)) {
     return rebuildValue(value);
   }
   return `{\n${keys(value).map(el => (
-    `${skip(gap + breakGap)}  ${el}: ${isPlainObject(value[el])
-      ? stringify(value[el], gap + breakGap)
+    `${skip(depth + levelDepth)}  ${el}: ${isPlainObject(value[el])
+      ? stringify(value[el], depth + levelDepth)
       : rebuildValue(value[el])}`))
-    .join('\n')}\n${skip(gap)}  }`;
+    .join('\n')}\n${skip(depth)}  }`;
 };
 
-const render = (difData, gap) => {
-  const getLine = ({
-    type, name, value, beforeValue, afterValue, children,
-  }) => {
-    const linesSelection = ({
-      added: () => `+ ${name}: ${stringify(value, gap)}`,
-      deleted: () => `- ${name}: ${stringify(value, gap)}`,
-      updated: () => [`+ ${name}: ${stringify(afterValue, gap)}`, `- ${name}: ${stringify(beforeValue, gap)}`],
-      node: () => `  ${name}: {\n${render(children, gap + breakGap)}\n${skip(gap)}  }`,
-      unchanged: () => `  ${name}: ${stringify(value, gap)}`,
-    });
-    return linesSelection[type]();
-  };
-
-  return difData.map(el => getLine(el))
-  |> flattenDeep
-  |> (_ => _.map(el => `${skip(gap)}${el}`))
-  |> (_ => _.join('\n'));
+const getLine = ({
+  type, name, value, valueBefore, valueAfter, children,
+}, func, depth) => {
+  const linesSelection = ({
+    added: () => `+ ${name}: ${stringify(value, depth)}`,
+    deleted: () => `- ${name}: ${stringify(value, depth)}`,
+    updated: () => [`+ ${name}: ${stringify(valueAfter, depth)}`, `- ${name}: ${stringify(valueBefore, depth)}`],
+    node: () => `  ${name}: {\n${func(children, depth + levelDepth)}\n${skip(depth)}  }`,
+    unchanged: () => `  ${name}: ${stringify(value, depth)}`,
+  });
+  return linesSelection[type]();
 };
 
-export default astData => `{\n${render(astData, startGap)}\n}`;
+const render = (difData, nodeDepth = rootNodeDepth) => difData
+|> (_ => _.map(el => getLine(el, render, nodeDepth)))
+|> flattenDeep
+|> (_ => _.map(el => `${skip(nodeDepth)}${el}`))
+|> (_ => _.join('\n'));
+
+export default astData => `{\n${render(astData)}\n}`;
